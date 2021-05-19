@@ -1,0 +1,12 @@
+{
+  "name": "watchinterface",
+  "displayName": "watchinterface",
+  "expo": {
+    "name": "watchinterface",
+    "slug": "watchinterface",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
