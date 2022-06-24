@@ -18,4 +18,8 @@ target 'watchinterface' do
   #     flipper_post_install(installer)
   #   end
   # end
+  pod 'react-native-ble-plx', :path => '../node_modules/react-native-ble-plx'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
 end
