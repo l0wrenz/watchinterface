@@ -12,10 +12,18 @@ import {
   Button,
 } from "react-native";
 import { LineChart, Grid } from "react-native-svg-charts";
-
 import { BleManager } from "react-native-ble-plx";
 
 var Buffer = require("buffer/").Buffer;
+
+const CONFIG = {
+  BACKEND_IP: "localhost",
+  BACKEND_PORT: "5000",
+  PROTOCOL: "http",
+  WATCH_BT_ID: "PLACEHOLDER",
+};
+
+const FLASK_BACKEND_URL = `${CONFIG.PROTOCOL}://${CONFIG.BACKEND_IP}:${CONFIG.BACKEND_PORT}`;
 
 class Settings extends Component {
   constructor() {
@@ -70,12 +78,12 @@ class Settings extends Component {
     response: "",
     connected: false,
     current_timer: 5,
-    img_src: "http://h2942775.stratoserver.net:5000/get_image?v=",
+    img_src: FLASK_BACKEND_URL + "/get_image?v=",
     pulse_state: "",
   };
 
   postAPI = (data_to_send) => {
-    fetch("http://h2942775.stratoserver.net:5000/post_pulse_data", {
+    fetch(FLASK_BACKEND_URL + "/post_pulse_data", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -87,10 +95,7 @@ class Settings extends Component {
     });
     setTimeout(() => {
       this.setState({
-        img_src:
-          "http://h2942775.stratoserver.net:5000/get_image?v=" +
-          Date.now() +
-          "kk",
+        img_src: FLASK_BACKEND_URL + "/get_image?v=" + Date.now() + "kk",
       });
     }, 500);
   };
@@ -137,7 +142,7 @@ class Settings extends Component {
         return;
       }
       this.setState({ deviceid: device.id }, () => {
-        if (device.id == "E7:4A:13:50:94:D5") {
+        if (device.id == CONFIG.WATCH_BT_ID) {
           this.manager.stopDeviceScan();
           console.log("trying to connect");
           device
@@ -256,7 +261,7 @@ class Settings extends Component {
 
   setDifficulty = (settings) => {
     console.log(settings);
-    fetch("http://h2942775.stratoserver.net:5000/switch_difficulty", {
+    fetch(FLASK_BACKEND_URL + "/switch_difficulty", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -273,7 +278,7 @@ class Settings extends Component {
   };
 
   postID = () => {
-    fetch("http://h2942775.stratoserver.net:5000/switch_id", {
+    fetch(FLASK_BACKEND_URL + "/switch_id", {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -25,6 +25,15 @@ import Live from "./screens/live.js";
 
 const Stack = createNativeStackNavigator();
 
+const CONFIG = {
+  BACKEND_IP: "localhost",
+  BACKEND_PORT: "5000",
+  PROTOCOL: "http",
+  WATCH_BT_ID: "PLACEHOLDER",
+};
+
+const FLASK_BACKEND_URL = `${CONFIG.PROTOCOL}://${CONFIG.BACKEND_IP}:${CONFIG.BACKEND_PORT}`;
+
 var Buffer = require("buffer/").Buffer;
 
 class App extends Component {
@@ -52,7 +61,7 @@ class App extends Component {
     easySettings: { number_of_planes: 5, plane_speed: 3, darkness: false },
     difficultSettings: { number_of_planes: 15, plane_speed: 5, darkness: true },
     timer: 180,
-    img_src: "http://h2942775.stratoserver.net:5000/get_image?v=",
+    img_src: FLASK_BACKEND_URL + "/get_image?v=",
     interval: null,
     game_state: "idle",
   };
@@ -101,7 +110,7 @@ class App extends Component {
         return;
       }
       this.setState({ deviceid: device.id }, () => {
-        if (device.id == "E7:4A:13:50:94:D5") {
+        if (device.id == CONFIG.WATCH_BT_ID) {
           this.manager.stopDeviceScan();
           console.log("trying to connect");
           device
@@ -175,7 +184,7 @@ class App extends Component {
   };
 
   postID = () => {
-    fetch("http://h2942775.stratoserver.net:5000/switch_id", {
+    fetch(FLASK_BACKEND_URL + "/switch_id", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -192,7 +201,7 @@ class App extends Component {
   };
 
   setDifficulty = () => {
-    fetch("http://h2942775.stratoserver.net:5000/switch_difficulty", {
+    fetch(FLASK_BACKEND_URL + "/switch_difficulty", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -207,15 +216,13 @@ class App extends Component {
   };
 
   requestAPI = () => {
-    return fetch("http://h2942775.stratoserver.net:5000/info").then(
-      (response) => {
-        console.log(response);
-      }
-    );
+    return fetch(FLASK_BACKEND_URL + "/info").then((response) => {
+      console.log(response);
+    });
   };
 
   postAPI = (data_to_send) => {
-    fetch("http://h2942775.stratoserver.net:5000/post_pulse_data", {
+    fetch(FLASK_BACKEND_URL + "/post_pulse_data", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -227,10 +234,7 @@ class App extends Component {
     });
     setTimeout(() => {
       this.setState({
-        img_src:
-          "http://h2942775.stratoserver.net:5000/get_image?v=" +
-          Date.now() +
-          "kk",
+        img_src: FLASK_BACKEND_URL + "/get_image?v=" + Date.now() + "kk",
       });
     }, 500);
   };
